@@ -17,6 +17,7 @@ public class Cards
     private double space; //Vertical and horizontal space between each book
     private double cardsInRow; //Number of card images displayed in a row
     private int latestID; //Index of the most recently added book
+    private boolean allDisplayed; //If information of all cards are displayed
     
     /**
      * Initialise instance variables, and create 3 cards and put them in the collection
@@ -31,6 +32,7 @@ public class Cards
         this.height = height;
         this.space = space;
         this.cardsInRow = cardsInRow;
+        allDisplayed = false;
         latestID = 3;
         
         Card card1 = new Card("pikachu", "pikachu.webp", 10.00, width, height, space, cardsInRow, 1);
@@ -57,19 +59,51 @@ public class Cards
     }
     
     /**
-     * Find a card given its name
+     * Find a card given its name, and display its name, value, and image
      * 
      * @param name - name of card
-     * @return card - the card found
      */
-    //Possibility of returning null is not good when working with others
-    public Card findCard(String name){
-        Card cardFound = null;
+    public void findCard(String name){
         for(Card i : cards.values()){
             if (i.getName().equals(name)){
-                cardFound = i;
+                i.displayInfo();
             }
         }
-        return cardFound;
+    }
+    
+    /**
+     * Display info of all cards, including name, value and image
+     */
+    public void displayAll(){
+        UI.println("How to match up images and info: image order is from left to right, row by row, info is from top to bottom.");
+        for(Card i : cards.values()){
+                i.displayInfo();
+        }
+        allDisplayed = true;
+    }
+    
+    /**
+     * Hide the information of a card
+     * @param - name -- name of card
+     */
+    public void hideCard(String name){
+        //Clear all text and images
+        UI.clearGraphics();
+        UI.clearText();
+        if(allDisplayed == true){
+        //Display all information (including images) except that of the given card
+        this.displayBut(name);
+        }
+    }
+    /**
+     * Display the images and info of all cards but the given one
+     * @param - omit - name of card omitted
+     */
+    public void displayBut(String omit){
+        for(Card i : cards.values()){
+            if (i.getName() != omit){
+                i.displayInfo();
+            }
+        }
     }
 }
