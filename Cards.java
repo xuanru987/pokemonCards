@@ -83,27 +83,54 @@ public class Cards
     }
     
     /**
-     * Hide the information of a card
-     * @param - name -- name of card
+     * Hide all images and details of cards
      */
-    public void hideCard(String name){
-        //Clear all text and images
+    public void hideAll(){
         UI.clearGraphics();
         UI.clearText();
-        if(allDisplayed == true){
-        //Display all information (including images) except that of the given card
-        this.displayBut(name);
+    }
+    
+    /**
+     * Hide the information of the card a given point is on, if the point is on a card
+     * @param - x - x-coordinate of point
+     * @param - y - y-coordinate of point
+     */
+    public void hideCard(double x, double y){
+        Card cardTHide = cardOnP(x, y);
+        if (cardTHide!= null){
+            this.hideAll();
+            if(allDisplayed == true){
+            //Display all information (including images) except that of the given card
+            this.displayBut(cardTHide);
+        }
         }
     }
     /**
      * Display the images and info of all cards but the given one
-     * @param - omit - name of card omitted
+     * @param - omit - card omitted
      */
-    public void displayBut(String omit){
+    public void displayBut(Card omit){
         for(Card i : cards.values()){
-            if (i.getName() != omit){
+            if (i != omit){
                 i.displayInfo();
             }
         }
+    }
+    
+    /**
+     * Iterate through the card collection to check if a point is on any of the cards' images
+     * Returns null if none of the cards are on the point
+     * @param - x-  x-coordinate of the point
+     * @param - y-  y-coordinate of the point
+     * @return cardOnP - the card the point is on
+     */
+    public Card cardOnP(double x, double y){
+        Card cardOnP = null;
+        for(Card i : cards.values()){
+            if(i.onImg(x, y)){
+                cardOnP = i;
+            }
+        }
+        return cardOnP;
     }
 }
