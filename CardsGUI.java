@@ -5,11 +5,11 @@ import ecs100.*;
  * Add a card, find a card's details, display the details of all cards, and hiding all details 
  * User clicks a button to perform the corresponding action
  * User can also click on a card's image to hide the card's details
+ * 
  * @author Sydney Liu
  * @version 24/5/2025
  */
-public class CardsGUI
-{
+  public class CardsGUI{
     //Instance variables
     private double width; //Width of each book
     private double height; //Height of each book
@@ -20,8 +20,7 @@ public class CardsGUI
     /**
      * Initialise instance variables, and add buttons and mouse listener
      */
-    public CardsGUI()
-    {
+    public CardsGUI(){
         width = 50; 
         height = 70;
         space = 20;
@@ -40,9 +39,9 @@ public class CardsGUI
      */
     public void addCard(){
         String inptName = this.forceValidStr("Enter card name:", 50);
-        double inptValue = UI.askDouble("Enter value of card (just the number):");
-        String inptImg = UIFileChooser.open("Choose an image:");
-        cards.addCard(inptName, inptImg, inptValue); //Let user add a card if they enter "A"
+        double inptValue = this.forceValidDbl("Enter value of card (just the number):", 5500000);
+        String inptImg = this.forceJpg("Choose an image:");
+        cards.addCard(inptName, inptImg, inptValue); 
     }
     
     /**
@@ -64,9 +63,10 @@ public class CardsGUI
         }
     }
     /**
-     * Forces user to enter a valid string
+     * Force user to enter a valid string
      * Valid string requirement 1: containing characters other than whitespaces
      * Requirement 2: number of characters is less than or equal to maxLen
+     * 
      * @param String message - input prompt
      * @param int maxLen = maximum length allowed for the final input
      * @return inputStr - final string input
@@ -76,12 +76,43 @@ public class CardsGUI
         do{
             inputStr = UI.askString(message).strip();
             if(inputStr == "" || inputStr.length() > maxLen){
-                UI.println("Please enter a valid string:");
+                UI.println("Please enter a non-blank name no more than " + maxLen + " characters.");
             }
-        }while(inputStr == "" || inputStr.length() > maxLen);
+        }while(inputStr.equals("") || inputStr.length() > maxLen);
         return inputStr;
     }
+    /**
+     * Force user to enter a positive double no greater than a certain limit
+     * 
+     * @param String message - input prompt
+     * @param double maxNum - maximum number allowed
+     * @return finalDbl - final double input
+     */
+    public double forceValidDbl(String message, double maxNum){
+        double inputDbl = 0;
+        do{
+            inputDbl = UI.askDouble(message);
+            if(inputDbl <= 0 || inputDbl > maxNum){
+                UI.println("Please enter a positive number no greater than " + maxNum);
+            }
+        }while (inputDbl <= 0 || inputDbl > maxNum);
+        inputDbl = (inputDbl * 100 - (inputDbl * 100) % 1)/100; //Rounds the input double to 2dp
+        return inputDbl;
+    }
     
+    /**
+     * Force user to choose a jpg file from filechooser
+     * 
+     * @param String message - input prompt
+     * @return finalImg - final image chosen
+     */
+    public String forceJpg(String message){
+        String finalImg = "";
+        do{
+            finalImg = UIFileChooser.open(message + " (must be jpg)");
+        }while(finalImg == null || finalImg.contains("jpg") == false);
+        return finalImg;
+    }
     /**
      * Main method
      * Create GUI
@@ -89,6 +120,4 @@ public class CardsGUI
     public static void main(String[] args){
         CardsGUI GUI = new CardsGUI();
     }
-    
-    
-    }
+}
